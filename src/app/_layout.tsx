@@ -1,8 +1,7 @@
 import { Stack } from "expo-router";
 
 import "@/ui/global.css";
-import { Pressable, Text, TouchableOpacity } from "react-native";
-import { ScannerButton } from "@/ui/components/scanner-button";
+import { Scanner } from "@/ui/components/scanner";
 
 export default function RootLayout() {
   return (
@@ -12,7 +11,7 @@ export default function RootLayout() {
         options={{
           title: "Lista de itens",
           headerLargeTitle: true,
-          headerRight: () => <ScannerButton />,
+          headerRight: () => <Scanner />,
           headerSearchBarOptions: {
             placement: "automatic",
             placeholder: "Buscar itens na lista",

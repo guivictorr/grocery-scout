@@ -1,9 +1,9 @@
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-export function ScannerButton() {
+export function ScannerButton(props: TouchableOpacityProps) {
   return (
-    <TouchableOpacity>
+    <TouchableOpacity {...props}>
       <Ionicons name="barcode-outline" size={24} color="black" />
     </TouchableOpacity>
   );
