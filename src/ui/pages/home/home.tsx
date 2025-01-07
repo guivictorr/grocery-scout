@@ -20,7 +20,7 @@ function generateMockData(count: number) {
 export function Home() {
   return (
     <FlatList
-      data={generateMockData(30)}
+      data={generateMockData(1)}
       contentInsetAdjustmentBehavior="always"
       keyExtractor={(item) => item.toString()}
       ListEmptyComponent={() => <Text>Vazio</Text>}
