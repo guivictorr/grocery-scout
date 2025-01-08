@@ -1,4 +1,4 @@
-import { type SQLiteDatabase } from "expo-sqlite";
+import { type SQLiteDatabase, openDatabaseAsync } from "expo-sqlite";
 
 export async function migrateDb(database: SQLiteDatabase) {
   await database.execAsync(`
@@ -28,4 +28,40 @@ export async function migrateDb(database: SQLiteDatabase) {
     FOREIGN KEY (marketId) REFERENCES markets(id) ON DELETE CASCADE
   );
 `);
+}
+
+export interface ProductData {
+  createdAt: string;
+  updatedAt: string;
+  id: number;
+  ean: string;
+  name: string;
+}
+
+export async function createProduct(data: Pick<ProductData, "name" | "ean">) {
+  const db = await openDatabaseAsync("database.db");
+  const statement = await db.prepareAsync(
+    "INSERT INTO products (name,ean) VALUES ($name, $ean)",
+  );
+  try {
+    const result = await statement.executeAsync({
+      $name: data.name,
+      $ean: data.ean,
+    });
+
+    const insertedRowId = result.lastInsertRowId.toLocaleString();
+    return { insertedRowId };
+  } catch (error) {
+    throw error;
+  } finally {
+    await statement.finalizeAsync();
+    await db.closeAsync();
+  }
+}
+
+export async function listProducts() {
+  const db = await openDatabaseAsync("database.db");
+  const rows = await db.getAllAsync<ProductData>("SELECT * FROM products");
+  await db.closeAsync();
+  return rows;
 }
