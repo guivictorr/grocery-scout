@@ -1,20 +1,16 @@
 import { CameraView } from "expo-camera";
-import { Button, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Animated, {
-  FadeIn,
-  FadeInUp,
-  FadeOut,
-  FadeOutDown,
-  FadeOutUp,
-  SlideOutUp,
-} from "react-native-reanimated";
+import Animated, { FadeOutDown } from "react-native-reanimated";
 import { useNavigation } from "expo-router";
 import { ScannerButton } from "./scanner-button";
+import { createProduct } from "@/infra/database";
+import { useRef } from "react";
 
 export function Scanner() {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
+  const scannerLock = useRef(false);
 
   return (
     <ScannerButton
@@ -33,9 +29,15 @@ export function Scanner() {
                 <CameraView
                   style={{ width: "100%", height: 100 }}
                   barcodeScannerSettings={{ barcodeTypes: ["ean13", "ean8"] }}
-                  onBarcodeScanned={() =>
-                    navigation.setOptions({ header: undefined })
-                  }
+                  onBarcodeScanned={async ({ data }) => {
+                    if (scannerLock.current) return;
+                    if (data) {
+                      scannerLock.current = true;
+                    }
+                    await createProduct({ ean: data, name: "Pão Diverso" });
+                    navigation.setOptions({ header: undefined });
+                    scannerLock.current = false;
+                  }}
                 />
               </View>
             </Animated.View>
