@@ -37,6 +37,14 @@ export interface ProductData {
   ean: string;
   name: string;
 }
+export interface MarketData {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  lat: number;
+  lon: number;
+}
 
 export async function createProduct(data: Pick<ProductData, "name" | "ean">) {
   const db = await openDatabaseAsync("database.db");
@@ -59,9 +67,9 @@ export async function createProduct(data: Pick<ProductData, "name" | "ean">) {
   }
 }
 
-export async function listProducts() {
+export async function listMarkets() {
   const db = await openDatabaseAsync("database.db");
-  const rows = await db.getAllAsync<ProductData>("SELECT * FROM products");
+  const rows = await db.getAllAsync<MarketData>("SELECT * FROM markets");
   await db.closeAsync();
   return rows;
 }
