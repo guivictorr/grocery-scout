@@ -1,18 +1,13 @@
-import { listMarkets } from "@/infra/database";
-import { useQuery } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
-import { FlatList, Text, View } from "react-native";
+import { useActionSheet } from "@expo/react-native-action-sheet";
+import { router } from "expo-router";
+import { FlatList, Pressable, Text, View } from "react-native";
 
 export function Home() {
-  const { data, isRefetching, refetch } = useQuery({
-    queryFn: listMarkets,
-    queryKey: ["products"],
-  });
-
+  const { showActionSheetWithOptions } = useActionSheet();
   return (
     <View className="flex-1">
       <FlatList
-        data={data}
+        data={[{ id: "id", name: "Mercado 1", createdAt: new Date() }]}
         contentInsetAdjustmentBehavior="always"
         contentContainerClassName="items-center justify-center"
         keyExtractor={(item) => String(item.id)}
@@ -21,13 +16,28 @@ export function Home() {
             <Text className="text-lg">Nenhum item encontrado</Text>
           </View>
         )}
-        refreshing={isRefetching}
-        onRefresh={() => refetch()}
         renderItem={({ item }) => (
-          <View className="flex-row justify-between items-center px-4 py-3 border-b-[0.3px] border-gray-400">
+          <Pressable
+            onPress={() =>
+              showActionSheetWithOptions(
+                {
+                  options: ["Scanner", "Products", "Cancelar"],
+                  cancelButtonIndex: 2,
+                },
+                (selectedOption) => {
+                  switch (selectedOption) {
+                    case 0:
+                      router.push("/scanner");
+                      break;
+                  }
+                },
+              )
+            }
+            className="flex-row justify-between items-center active:bg-gray-100 px-4 py-3 border-b-[0.3px] border-gray-400 w-full"
+          >
             <Text className="text-lg">{item.name}</Text>
-            <Text className="text-lg">{item.createdAt}</Text>
-          </View>
+            <Text className="text-lg">8 produtos</Text>
+          </Pressable>
         )}
       />
     </View>
