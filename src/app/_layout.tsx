@@ -16,7 +16,7 @@ export default function RootLayout() {
             <Stack.Screen
               name="index"
               options={{
-                title: "Lista de itens",
+                title: "Mercados",
                 headerLargeTitle: true,
                 // headerSearchBarOptions: {
                 //   placement: "automatic",
@@ -29,6 +29,13 @@ export default function RootLayout() {
               options={{
                 headerShown: false,
                 presentation: "modal",
+              }}
+            />
+            <Stack.Screen
+              name="new-market"
+              options={{
+                presentation: "formSheet",
+                headerShown: false,
               }}
             />
             <Stack.Screen
