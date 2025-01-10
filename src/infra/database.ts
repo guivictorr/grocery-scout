@@ -66,6 +66,29 @@ export async function createProduct(data: Pick<ProductData, "name" | "ean">) {
     await db.closeAsync();
   }
 }
+export async function createMarket(
+  data: Pick<MarketData, "name" | "lat" | "lon">,
+) {
+  const db = await openDatabaseAsync("database.db");
+  const statement = await db.prepareAsync(
+    "INSERT INTO markets (name, lat, lon) VALUES ($name, $lat, $lon)",
+  );
+  try {
+    const result = await statement.executeAsync({
+      $name: data.name,
+      $lat: data.lat,
+      $lon: data.lon,
+    });
+
+    const insertedRowId = result.lastInsertRowId.toLocaleString();
+    return { insertedRowId };
+  } catch (error) {
+    throw error;
+  } finally {
+    await statement.finalizeAsync();
+    await db.closeAsync();
+  }
+}
 
 export async function listMarkets() {
   const db = await openDatabaseAsync("database.db");

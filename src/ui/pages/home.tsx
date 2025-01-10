@@ -1,13 +1,19 @@
+import { listMarkets } from "@/infra/database";
 import { useActionSheet } from "@expo/react-native-action-sheet";
+import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Button, FlatList, Pressable, Text, View } from "react-native";
 
 export function Home() {
   const { showActionSheetWithOptions } = useActionSheet();
+  const { data } = useQuery({
+    queryFn: listMarkets,
+    queryKey: ["markets"],
+  });
   return (
     <View className="flex-1">
       <FlatList
-        data={[{ id: "id", name: "Mercado 1", createdAt: new Date() }]}
+        data={data}
         contentInsetAdjustmentBehavior="always"
         contentContainerClassName="items-center justify-center"
         keyExtractor={(item) => String(item.id)}
@@ -43,7 +49,9 @@ export function Home() {
             className="flex-row justify-between items-center active:bg-gray-100 px-5 py-4 border-b-[0.3px] border-gray-400 w-full"
           >
             <Text className="text-2xl">{item.name}</Text>
-            <Text className="text-lg">8 produtos</Text>
+            <Text className="text-lg">
+              {new Date(item.createdAt).toLocaleDateString("pt-br")}
+            </Text>
           </Pressable>
         )}
       />
