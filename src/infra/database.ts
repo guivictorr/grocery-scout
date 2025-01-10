@@ -46,6 +46,12 @@ export interface MarketData {
   lon: number;
 }
 
+export interface PriceData {
+  price: number;
+  marketId: number;
+  productId: number;
+}
+
 export async function createProduct(data: Pick<ProductData, "name" | "ean">) {
   const db = await openDatabaseAsync("database.db");
   const statement = await db.prepareAsync(
@@ -55,6 +61,27 @@ export async function createProduct(data: Pick<ProductData, "name" | "ean">) {
     const result = await statement.executeAsync({
       $name: data.name,
       $ean: data.ean,
+    });
+
+    const insertedRowId = result.lastInsertRowId.toLocaleString();
+    return { insertedRowId };
+  } catch (error) {
+    throw error;
+  } finally {
+    await statement.finalizeAsync();
+    await db.closeAsync();
+  }
+}
+export async function createPrice(data: PriceData) {
+  const db = await openDatabaseAsync("database.db");
+  const statement = await db.prepareAsync(
+    "INSERT INTO prices (price, productId, marketId) VALUES ($price, $productId, $marketId)",
+  );
+  try {
+    const result = await statement.executeAsync({
+      $price: data.price,
+      $productId: data.productId,
+      $marketId: data.marketId,
     });
 
     const insertedRowId = result.lastInsertRowId.toLocaleString();
@@ -90,9 +117,25 @@ export async function createMarket(
   }
 }
 
+export async function getProductByEan(ean: string) {
+  const db = await openDatabaseAsync("database.db");
+  const rows = await db.getFirstAsync<ProductData>(
+    "SELECT * FROM products WHERE ean = $ean",
+    { $ean: ean },
+  );
+  await db.closeAsync();
+  return rows;
+}
 export async function listMarkets() {
   const db = await openDatabaseAsync("database.db");
-  const rows = await db.getAllAsync<MarketData>("SELECT * FROM markets");
+  const rows = await db.getAllAsync<MarketData & { productCount: number }>(`
+    SELECT 
+      markets.*,
+      COUNT(DISTINCT prices.productId) as productCount 
+    FROM markets 
+    LEFT JOIN prices ON prices.marketId = markets.id 
+    GROUP BY markets.id
+  `);
   await db.closeAsync();
   return rows;
 }

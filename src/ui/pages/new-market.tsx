@@ -2,7 +2,6 @@ import {
   getCurrentPositionAsync,
   LocationObject,
   requestForegroundPermissionsAsync,
-  useForegroundPermissions,
 } from "expo-location";
 import { createMarket } from "@/infra/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,7 +16,8 @@ export function NewMarket() {
   const { mutate } = useMutation({
     mutationFn: createMarket,
     onSuccess: () => {
-      return queryClient.invalidateQueries({ queryKey: ["markets"] });
+      queryClient.invalidateQueries({ queryKey: ["markets"] });
+      router.back();
     },
   });
 

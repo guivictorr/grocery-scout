@@ -6,7 +6,7 @@ import { Button, FlatList, Pressable, Text, View } from "react-native";
 
 export function Home() {
   const { showActionSheetWithOptions } = useActionSheet();
-  const { data } = useQuery({
+  const { data, refetch, isRefetching } = useQuery({
     queryFn: listMarkets,
     queryKey: ["markets"],
   });
@@ -17,6 +17,8 @@ export function Home() {
         contentInsetAdjustmentBehavior="always"
         contentContainerClassName="items-center justify-center"
         keyExtractor={(item) => String(item.id)}
+        refreshing={isRefetching}
+        onRefresh={() => refetch()}
         ListFooterComponentClassName="mt-4"
         ListFooterComponent={() => (
           <Button
@@ -40,7 +42,10 @@ export function Home() {
                 (selectedOption) => {
                   switch (selectedOption) {
                     case 0:
-                      router.push("/scanner");
+                      router.push({
+                        pathname: "/scanner",
+                        params: { marketId: item.id },
+                      });
                       break;
                   }
                 },
@@ -49,9 +54,7 @@ export function Home() {
             className="flex-row justify-between items-center active:bg-gray-100 px-5 py-4 border-b-[0.3px] border-gray-400 w-full"
           >
             <Text className="text-2xl">{item.name}</Text>
-            <Text className="text-lg">
-              {new Date(item.createdAt).toLocaleDateString("pt-br")}
-            </Text>
+            <Text className="text-lg">{item.productCount} Produtos</Text>
           </Pressable>
         )}
       />

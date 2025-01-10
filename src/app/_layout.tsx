@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "@/ui/global.css";
 import { migrateDb } from "@/infra/database";
-import { Button } from "react-native";
 const queryClient = new QueryClient();
 export default function RootLayout() {
   return (
@@ -28,7 +27,6 @@ export default function RootLayout() {
               name="scanner"
               options={{
                 headerShown: false,
-                presentation: "modal",
               }}
             />
             <Stack.Screen
@@ -39,10 +37,17 @@ export default function RootLayout() {
               }}
             />
             <Stack.Screen
-              name="new-product"
+              name="new-price"
               options={{
                 presentation: "formSheet",
                 headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="new-product"
+              options={{
+                headerShown: false,
+                presentation: "formSheet",
               }}
             />
           </Stack>
