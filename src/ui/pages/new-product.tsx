@@ -2,8 +2,8 @@ import React from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createProduct, getProductByEan } from "@/infra/database";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createProduct } from "@/infra/database";
 
 export function NewProduct() {
   const [productName, setProductName] = useState("");
@@ -14,7 +14,6 @@ export function NewProduct() {
   const { mutate: createProductMutation } = useMutation({
     mutationFn: createProduct,
     onSuccess: ({ insertedRowId }) => {
-      console.log(insertedRowId);
       queryClient.invalidateQueries({ queryKey: ["products"] });
       router.replace({
         pathname: "/new-price",

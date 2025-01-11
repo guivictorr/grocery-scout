@@ -36,7 +36,7 @@ export function Home() {
             onPress={() =>
               showActionSheetWithOptions(
                 {
-                  options: ["Scanner", "Products", "Cancelar"],
+                  options: ["Escanear", "Produtos", "Cancelar"],
                   cancelButtonIndex: 2,
                 },
                 (selectedOption) => {
@@ -44,6 +44,12 @@ export function Home() {
                     case 0:
                       router.push({
                         pathname: "/scanner",
+                        params: { marketId: item.id },
+                      });
+                      break;
+                    case 1:
+                      router.push({
+                        pathname: "/products",
                         params: { marketId: item.id },
                       });
                       break;

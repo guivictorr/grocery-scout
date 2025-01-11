@@ -3,7 +3,7 @@ import { TextInput, TextInputProps } from "react-native";
 
 interface CurrencyInputProps
   extends Omit<TextInputProps, "value" | "onChangeText"> {
-  onValueChange?: (value: number) => void;
+  onValueChange?: (value: string) => void;
   initialValue?: string;
   setStep?: (step: string) => void;
 }
@@ -45,9 +45,7 @@ const CurrencyInput = ({
       const rawValue = text.replace(/[^\d]/g, "");
       const formattedValue = formatCurrency(rawValue);
       setValue(formattedValue);
-      // Convert to cents by multiplying by 100
-      const valueInCents = rawValue ? parseInt(rawValue, 10) * 100 : 0;
-      onValueChange?.(valueInCents);
+      onValueChange?.(rawValue);
     }
   };
 

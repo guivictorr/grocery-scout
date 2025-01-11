@@ -3,18 +3,20 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
 import CurrencyInput from "../components/currency-input";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPrice } from "@/infra/database";
 
 export function NewPrice() {
   const [price, setPrice] = useState(0);
 
+  const queryClient = useQueryClient();
   const { marketId, productId } = useLocalSearchParams();
 
   const { mutate: createPriceMutation } = useMutation({
     mutationFn: createPrice,
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["markets"] });
+      queryClient.invalidateQueries({ queryKey: ["prices", marketId] });
       router.back();
     },
   });

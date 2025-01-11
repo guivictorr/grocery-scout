@@ -136,6 +136,34 @@ export async function listMarkets() {
     LEFT JOIN prices ON prices.marketId = markets.id 
     GROUP BY markets.id
   `);
+  console.log(rows);
   await db.closeAsync();
   return rows;
+}
+
+type LatestPriceData = {
+  id: number;
+  price: number;
+  name: string;
+  createdAt: string;
+};
+export async function getLatestPricesInMarket(marketId: number) {
+  const db = await openDatabaseAsync("database.db");
+  try {
+    const rows = await db.getAllAsync<LatestPriceData>(
+      "SELECT prices.id, prices.price, products.name, MAX(prices.createdAt) AS createdAt FROM prices INNER JOIN products ON prices.productId = products.id WHERE prices.marketId = $marketId GROUP BY products.id",
+      { $marketId: marketId },
+    );
+    return rows;
+  } finally {
+    await db.closeAsync();
+  }
+}
+export async function cleanProducts() {
+  const db = await openDatabaseAsync("database.db");
+  try {
+    await db.runAsync("DELETE FROM prices");
+  } finally {
+    await db.closeAsync();
+  }
 }

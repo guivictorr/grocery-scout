@@ -4,7 +4,8 @@ import { SQLiteProvider } from "expo-sqlite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "@/ui/global.css";
-import { migrateDb } from "@/infra/database";
+import { cleanProducts, migrateDb } from "@/infra/database";
+import { Button } from "react-native";
 const queryClient = new QueryClient();
 export default function RootLayout() {
   return (
@@ -48,6 +49,23 @@ export default function RootLayout() {
               options={{
                 headerShown: false,
                 presentation: "formSheet",
+              }}
+            />
+            <Stack.Screen
+              name="products"
+              options={{
+                title: "Preços",
+                headerLargeTitle: true,
+                headerRight: () => (
+                  <Button
+                    title="Deletar produtos"
+                    onPress={async () => await cleanProducts()}
+                  />
+                ),
+                // headerSearchBarOptions: {
+                //   placement: "automatic",
+                //   placeholder: "Buscar itens na lista",
+                // },
               }}
             />
           </Stack>
