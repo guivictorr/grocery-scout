@@ -2,8 +2,8 @@
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
   "tasks": {
-    "lint": {
-      "dependsOn": ["^lint"]
+    "lint:eslint:check": {
+      "dependsOn": ["^lint:eslint:check"]
     },
     "dev": {
       "cache": false,

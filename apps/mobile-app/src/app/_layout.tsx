@@ -1,4 +1,4 @@
-import { Stack, Link } from "expo-router";
+import { Stack } from "expo-router";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { SQLiteProvider } from "expo-sqlite";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";

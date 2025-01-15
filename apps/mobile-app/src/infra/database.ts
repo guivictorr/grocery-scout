@@ -65,8 +65,6 @@ export async function createProduct(data: Pick<ProductData, "name" | "ean">) {
 
     const insertedRowId = result.lastInsertRowId.toLocaleString();
     return { insertedRowId };
-  } catch (error) {
-    throw error;
   } finally {
     await statement.finalizeAsync();
     await db.closeAsync();
@@ -86,8 +84,6 @@ export async function createPrice(data: PriceData) {
 
     const insertedRowId = result.lastInsertRowId.toLocaleString();
     return { insertedRowId };
-  } catch (error) {
-    throw error;
   } finally {
     await statement.finalizeAsync();
     await db.closeAsync();
@@ -109,8 +105,6 @@ export async function createMarket(
 
     const insertedRowId = result.lastInsertRowId.toLocaleString();
     return { insertedRowId };
-  } catch (error) {
-    throw error;
   } finally {
     await statement.finalizeAsync();
     await db.closeAsync();

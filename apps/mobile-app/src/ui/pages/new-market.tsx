@@ -35,13 +35,13 @@ export function NewMarket() {
 
   useEffect(() => {
     async function getCurrentLocation() {
-      let { status } = await requestForegroundPermissionsAsync();
+      const { status } = await requestForegroundPermissionsAsync();
       if (status !== "granted") {
         Alert.alert("Permissão para acessar localização negada");
         return;
       }
 
-      let location = await getCurrentPositionAsync();
+      const location = await getCurrentPositionAsync();
       setLocation(location);
     }
 

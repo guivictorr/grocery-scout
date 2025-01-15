@@ -11,7 +11,6 @@ interface CurrencyInputProps
 const CurrencyInput = ({
   onValueChange,
   initialValue = "",
-  setStep,
   ...props
 }: CurrencyInputProps) => {
   const [value, setValue] = useState<string>(initialValue);
