@@ -2,7 +2,8 @@
   "name": "grocery-scout",
   "scripts": {
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "lint:eslint:check": "turbo run lint:eslint:check",
+    "lint:eslint:fix": "turbo run lint:eslint:fix",
     "lint:prettier:check": "prettier --check .",
     "lint:prettier:fix": "prettier --write ."
   },
