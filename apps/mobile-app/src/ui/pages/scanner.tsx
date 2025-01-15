@@ -1,7 +1,7 @@
 import { getProductByEan } from "@/infra/database";
 import { CameraView } from "expo-camera";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { View } from "react-native";
 export function Scanner() {
   const { marketId } = useLocalSearchParams();
