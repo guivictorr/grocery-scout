@@ -4,11 +4,14 @@
     "dev": "turbo run dev",
     "lint:eslint:check": "turbo run lint:eslint:check",
     "lint:prettier:check": "prettier --check .",
-    "lint:prettier:fix": "prettier --write ."
+    "lint:prettier:fix": "prettier --write .",
+    "commit": "cz"
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.1",
     "@commitlint/config-conventional": "19.6.0",
+    "commitizen": "4.3.1",
+    "cz-conventional-changelog": "3.3.0",
     "prettier": "3.4.2",
     "turbo": "2.3.3",
     "typescript": "5.5.4"
@@ -20,5 +23,10 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
