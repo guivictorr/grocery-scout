@@ -3,6 +3,7 @@
   "scripts": {
     "dev": "tsx src/server.ts",
     "test": "jest",
+    "test:watch": "jest --watchAll --runInBand --verbose",
     "lint:eslint:check": "eslint ."
   },
   "dependencies": {
