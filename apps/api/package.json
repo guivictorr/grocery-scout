@@ -4,10 +4,12 @@
     "dev": "tsx watch --env-file=.env.development src/server.ts",
     "test": "jest",
     "test:watch": "jest --watchAll --runInBand --verbose",
-    "lint:eslint:check": "eslint .",
+    "lint": "eslint .",
     "services:up": "docker compose -f src/infra/compose.yml up -d",
     "services:stop": "docker compose -f src/infra/compose.yml stop",
-    "services:down": "docker compose -f src/infra/compose.yml down"
+    "services:down": "docker compose -f src/infra/compose.yml down",
+    "migrations:create": "node-pg-migrate create",
+    "migrations:up": "node-pg-migrate up --envPath=.env.development"
   },
   "dependencies": {
     "dotenv": "16.4.7",
@@ -20,6 +22,7 @@
     "@types/node": "22.10.6",
     "@types/pg": "8.11.10",
     "jest": "29.7.0",
+    "node-pg-migrate": "7.9.0",
     "tsx": "4.19.2",
     "typescript": "5.7.3"
   }
