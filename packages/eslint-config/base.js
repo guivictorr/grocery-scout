@@ -21,6 +21,6 @@ export const config = [
     },
   },
   {
-    ignores: ["dist/**", ".turbo/**", ".expo/&&", "node_modules", "*.js"],
+    ignores: ["dist/**", ".turbo/**", ".expo/&&", "node_modules", "**/*.js"],
   },
 ];
