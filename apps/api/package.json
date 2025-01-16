@@ -1,7 +1,7 @@
 {
   "name": "api",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch --env-file=.env.development src/server.ts",
     "test": "jest",
     "test:watch": "jest --watchAll --runInBand --verbose",
     "lint:eslint:check": "eslint .",
@@ -10,6 +10,7 @@
     "services:down": "docker compose -f src/infra/compose.yml down"
   },
   "dependencies": {
+    "dotenv": "16.4.7",
     "fastify": "5.2.1",
     "pg": "8.13.1"
   },
