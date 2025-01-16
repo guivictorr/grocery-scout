@@ -13,6 +13,7 @@ import pluginReactHooks from "eslint-plugin-react-hooks";
  * */
 export const expoEslintConfig = [
   ...baseConfig,
+  { files: ["**/*.ts", "**/*.tsx"] },
   js.configs.recommended,
   eslintConfigPrettier,
   ...tseslint.configs.recommended,
