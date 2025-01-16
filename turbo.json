@@ -6,6 +6,9 @@
     "lint:eslint:check": {
       "dependsOn": ["^lint:eslint:check"]
     },
+    "test": {
+      "dependsOn": ["^test"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
