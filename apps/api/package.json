@@ -21,12 +21,16 @@
     "pg": "8.13.1"
   },
   "devDependencies": {
-    "concurrently": "8.2.2",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-typescript": "7.26.0",
     "@repo/eslint-config": "*",
     "@types/async-retry": "1.4.9",
     "@types/jest": "29.5.14",
     "@types/node": "22.10.6",
     "@types/pg": "8.11.10",
+    "babel-jest": "^29.7.0",
+    "concurrently": "8.2.2",
     "jest": "29.7.0",
     "node-pg-migrate": "7.6.0",
     "tsx": "4.19.2",
