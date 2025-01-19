@@ -1,44 +1,17 @@
-import Fastify from "fastify";
-import database from "@/infra/database";
+import Fastify, { FastifyInstance } from "fastify";
+import { InternalServerError } from "./infra/errors";
+import { statusController } from "./controllers/status";
 
-const fastify = Fastify({
-  logger: true,
+const fastify = Fastify();
+
+fastify.register(handleV1Routes, { prefix: "/api/v1" });
+fastify.setErrorHandler((error, request, reply) => {
+  const internalError = new InternalServerError({ cause: error });
+  console.error(internalError);
+  reply.status(internalError.statusCode).send(internalError.toJSON());
 });
-
-fastify.get("/api/v1/status", async (_, reply) => {
-  const databaseVersionResult = await database.query<{
-    server_version: string;
-  }>({
-    text: "SHOW server_version",
-  });
-  const databaseVersion = databaseVersionResult.rows[0].server_version;
-
-  const databaseMaxConnectionsResult = await database.query<{
-    max_connections: string;
-  }>({ text: "SHOW max_connections" });
-  const databaseMaxConnections =
-    databaseMaxConnectionsResult.rows[0].max_connections;
-
-  const databaseName = process.env.POSTGRES_DATABASE;
-  const databaseOpennedConnectionsResult = await database.query<{
-    count: number;
-  }>({
-    text: "SELECT count(*)::int FROM pg_stat_activity WHERE datname = $1",
-    values: [databaseName],
-  });
-  const databaseOpennedConnections =
-    databaseOpennedConnectionsResult.rows[0].count;
-
-  reply.status(200).send({
-    updated_at: new Date().toISOString(),
-    dependencies: {
-      database: {
-        version: databaseVersion,
-        max_connections: Number(databaseMaxConnections),
-        openned_connections: databaseOpennedConnections,
-      },
-    },
-  });
-});
-
 fastify.listen({ port: 3000 });
+
+function handleV1Routes(app: FastifyInstance) {
+  app.get("/status", statusController);
+}
