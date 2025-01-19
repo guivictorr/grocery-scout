@@ -1,6 +1,6 @@
 import Fastify, { FastifyInstance } from "fastify";
 import { InternalServerError, NotFoundError } from "./infra/errors";
-import { statusController } from "./controllers/status";
+import statusController from "./controllers/status";
 
 const fastify = Fastify();
 
@@ -17,5 +17,5 @@ fastify.setNotFoundHandler((request, reply) => {
 fastify.listen({ port: 3000 });
 
 function handleV1Routes(app: FastifyInstance) {
-  app.get("/status", statusController);
+  app.get("/status", statusController.get);
 }
