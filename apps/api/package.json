@@ -7,11 +7,11 @@
     "posttest": "npm run services:stop",
     "test:watch": "jest --watchAll --runInBand --verbose",
     "lint": "eslint .",
-    "services:up": "docker compose -f src/infra/compose.yml up -d",
-    "services:stop": "docker compose -f src/infra/compose.yml stop",
-    "services:down": "docker compose -f src/infra/compose.yml down",
-    "migrations:create": "node-pg-migrate create",
-    "migrations:up": "node-pg-migrate up --envPath=.env.development",
+    "services:up": "docker compose up -d",
+    "services:stop": "docker compose stop",
+    "services:down": "docker compose down",
+    "migrations:create": "node-pg-migrate -m src/infra/migrations create",
+    "migrations:up": "node-pg-migrate up -m src/infra/migrations --envPath=.env.development",
     "services:wait:database": "node src/infra/scripts/wait-for-postgres.js"
   },
   "dependencies": {
