@@ -1,7 +1,7 @@
 const { exec } = require("node:child_process");
 function checkPostgres() {
   exec(
-    "docker exec grocery-scout-dev-db pg_isready --host localhost",
+    "docker exec grocery-postgres-dev pg_isready --host localhost",
     handleReturn,
   );
 
