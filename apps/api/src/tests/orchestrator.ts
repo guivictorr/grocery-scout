@@ -1,4 +1,5 @@
 import retry from "async-retry";
+import database from "../infra/database";
 
 async function waitForAllServices() {
   await waitForWebServer();
@@ -18,8 +19,15 @@ async function waitForAllServices() {
   }
 }
 
+async function clearTables() {
+  await database.query({
+    text: "DELETE FROM prices;DELETE FROM products;DELETE FROM markets",
+  });
+}
+
 const orchestrator = {
   waitForAllServices,
+  clearTables,
 };
 
 export default orchestrator;
