@@ -1,12 +1,29 @@
 import Fastify, { FastifyInstance } from "fastify";
-import { BaseError, InternalServerError, NotFoundError } from "./infra/errors";
+import {
+  BaseError,
+  InternalServerError,
+  NotFoundError,
+  ValidationError,
+} from "./infra/errors";
 import statusController from "./controllers/status";
 import productsController from "./controllers/products";
+import { ZodError } from "zod";
 
 const fastify = Fastify();
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
 fastify.setErrorHandler((error, request, reply) => {
+  if (error instanceof ZodError) {
+    const propertyName = error.issues[0].path[0];
+    const errorMessage = error.issues[0].message;
+    const validationError = new ValidationError(
+      propertyName.toString(),
+      errorMessage,
+    );
+    return reply
+      .status(validationError.statusCode)
+      .send(validationError.toJSON());
+  }
   if (error instanceof BaseError) {
     return reply.status(error.statusCode).send(error.toJSON());
   }

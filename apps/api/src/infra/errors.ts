@@ -15,6 +15,18 @@ export class BaseError extends Error {
     };
   }
 }
+export class ValidationError extends BaseError {
+  constructor(
+    private propertyName: string,
+    private errorMessage: string,
+  ) {
+    super();
+    this.message = `The property ${this.propertyName} is invalid.`;
+    this.name = "ValidationError";
+    this.statusCode = 400;
+    this.action = this.errorMessage;
+  }
+}
 export class ConflictError extends BaseError {
   constructor() {
     super();
