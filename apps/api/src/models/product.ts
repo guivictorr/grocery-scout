@@ -35,6 +35,7 @@ async function create(name: string, ean: string) {
 
 const product = {
   create,
+  findByEan,
 };
 
 export default product;
