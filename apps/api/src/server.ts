@@ -1,11 +1,16 @@
 import Fastify, { FastifyInstance } from "fastify";
-import { InternalServerError, NotFoundError } from "./infra/errors";
+import { BaseError, InternalServerError, NotFoundError } from "./infra/errors";
 import statusController from "./controllers/status";
+import productsController from "./controllers/products";
 
 const fastify = Fastify();
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
 fastify.setErrorHandler((error, request, reply) => {
+  if (error instanceof BaseError) {
+    return reply.status(error.statusCode).send(error.toJSON());
+  }
+
   const internalError = new InternalServerError({ cause: error });
   console.error(internalError);
   reply.status(internalError.statusCode).send(internalError.toJSON());
