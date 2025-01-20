@@ -23,4 +23,5 @@ fastify.listen({ port: 3000 });
 
 function handleV1Routes(app: FastifyInstance) {
   app.get("/status", statusController.get);
+  app.post("/products", productsController.post);
 }
