@@ -5,7 +5,7 @@ beforeAll(async () => {
 });
 
 describe("GET /api/v1/status", () => {
-  it("should return system status", async () => {
+  test("Retrieving system status", async () => {
     const response = await fetch("http://localhost:3000/api/v1/status");
     const responseBody = await response.json();
 

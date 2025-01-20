@@ -1,11 +1,33 @@
 import Fastify, { FastifyInstance } from "fastify";
-import { InternalServerError, NotFoundError } from "./infra/errors";
+import {
+  BaseError,
+  InternalServerError,
+  NotFoundError,
+  ValidationError,
+} from "./infra/errors";
 import statusController from "./controllers/status";
+import productsController from "./controllers/products";
+import { ZodError } from "zod";
 
 const fastify = Fastify();
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
 fastify.setErrorHandler((error, request, reply) => {
+  if (error instanceof ZodError) {
+    const propertyName = error.issues[0].path[0];
+    const errorMessage = error.issues[0].message;
+    const validationError = new ValidationError(
+      propertyName.toString(),
+      errorMessage,
+    );
+    return reply
+      .status(validationError.statusCode)
+      .send(validationError.toJSON());
+  }
+  if (error instanceof BaseError) {
+    return reply.status(error.statusCode).send(error.toJSON());
+  }
+
   const internalError = new InternalServerError({ cause: error });
   console.error(internalError);
   reply.status(internalError.statusCode).send(internalError.toJSON());
@@ -18,4 +40,5 @@ fastify.listen({ port: 3000 });
 
 function handleV1Routes(app: FastifyInstance) {
   app.get("/status", statusController.get);
+  app.post("/products", productsController.post);
 }
