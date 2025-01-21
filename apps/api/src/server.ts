@@ -8,11 +8,13 @@ import {
 import statusController from "./controllers/status";
 import productsController from "./controllers/products";
 import { ZodError } from "zod";
+import marketsController from "./controllers/markets";
 
 const fastify = Fastify();
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
 fastify.setErrorHandler((error, request, reply) => {
+  console.error(error);
   if (error instanceof ZodError) {
     const propertyName = error.issues[0].path[0];
     const errorMessage = error.issues[0].message;
@@ -42,4 +44,5 @@ function handleV1Routes(app: FastifyInstance) {
   app.get("/status", statusController.get);
   app.post("/products", productsController.post);
   app.get("/products/:ean", productsController.get);
+  app.post("/markets", marketsController.post);
 }
