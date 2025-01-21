@@ -3,7 +3,14 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createProduct } from "@/infra/database";
+import { api } from "@/api/api-client";
+import { ProductDto } from "@/lib/react-query";
+import { AxiosResponse } from "axios";
+
+interface NewProductRequest {
+  name: string;
+  ean: string;
+}
 
 export function NewProduct() {
   const [productName, setProductName] = useState("");
@@ -12,12 +19,13 @@ export function NewProduct() {
 
   const queryClient = useQueryClient();
   const { mutate: createProductMutation } = useMutation({
-    mutationFn: createProduct,
-    onSuccess: ({ insertedRowId }) => {
+    mutationFn: (data: NewProductRequest) =>
+      api.post<NewProductRequest, AxiosResponse<ProductDto>>("products", data),
+    onSuccess: ({ data }) => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       router.replace({
         pathname: "/new-price",
-        params: { marketId, productId: insertedRowId },
+        params: { marketId, productId: data.id },
       });
     },
   });

@@ -1,4 +1,5 @@
-import { getProductByEan } from "@/infra/database";
+import { api } from "@/api/api-client";
+import { ProductDto } from "@/lib/react-query";
 import { CameraView } from "expo-camera";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { useCallback, useRef } from "react";
@@ -16,21 +17,21 @@ export function Scanner() {
   return (
     <View className="flex-1 relative">
       <CameraView
-        onBarcodeScanned={async ({ data }) => {
+        onBarcodeScanned={async ({ data: ean }) => {
           if (scannerLockRef.current) return;
-          if (data) {
+          if (ean) {
             scannerLockRef.current = true;
           }
-          const product = await getProductByEan(data);
-          if (product) {
+          const product = await api.get<ProductDto>(`products/${ean}`);
+          if (product.data) {
             router.push({
               pathname: "/new-price",
-              params: { productId: product.id, marketId },
+              params: { productId: product.data.id, marketId },
             });
           } else {
             router.push({
               pathname: "/new-product",
-              params: { ean: data, marketId },
+              params: { ean: ean, marketId },
             });
           }
         }}

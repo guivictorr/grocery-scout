@@ -3,20 +3,28 @@ import {
   LocationObject,
   requestForegroundPermissionsAsync,
 } from "expo-location";
-import { createMarket } from "@/infra/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, Text, TextInput, View } from "react-native";
+import queries, { MarketDto } from "@/lib/react-query";
+import { api } from "@/api/api-client";
+
+interface NewMarketRequest {
+  name: string;
+  lat: number;
+  lon: number;
+}
 
 export function NewMarket() {
   const queryClient = useQueryClient();
   const [location, setLocation] = useState<LocationObject | null>(null);
   const [marketName, setMarketName] = useState("");
   const { mutate } = useMutation({
-    mutationFn: createMarket,
+    mutationFn: (data: NewMarketRequest) =>
+      api.post<NewMarketRequest, MarketDto>("markets", data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["markets"] });
+      queryClient.invalidateQueries(queries.listMarketsQuery);
       router.back();
     },
   });

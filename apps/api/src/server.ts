@@ -11,7 +11,9 @@ import { ZodError } from "zod";
 import marketsController from "./controllers/markets";
 import pricesController from "./controllers/prices";
 
-const fastify = Fastify();
+const fastify = Fastify({
+  logger: true,
+});
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
 fastify.setErrorHandler((error, request, reply) => {
@@ -39,7 +41,7 @@ fastify.setNotFoundHandler((request, reply) => {
   const notFoundError = new NotFoundError();
   reply.status(notFoundError.statusCode).send(notFoundError.toJSON());
 });
-fastify.listen({ port: 3000 });
+fastify.listen({ port: 3000, host: "0.0.0.0" });
 
 function handleV1Routes(app: FastifyInstance) {
   app.get("/status", statusController.get);

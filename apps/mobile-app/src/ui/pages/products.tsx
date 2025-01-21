@@ -1,4 +1,4 @@
-import { getLatestPricesInMarket } from "@/infra/database";
+import queries from "@/lib/react-query";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
@@ -6,10 +6,9 @@ import { FlatList, View, Text } from "react-native";
 
 export function Products() {
   const { marketId } = useLocalSearchParams();
-  const { data, isRefetching, refetch } = useQuery({
-    queryFn: () => getLatestPricesInMarket(Number(marketId)),
-    queryKey: ["prices", marketId],
-  });
+  const { data, isRefetching, refetch } = useQuery(
+    queries.listPricesQuery(marketId.toString()),
+  );
   return (
     <View className="flex-1">
       <FlatList
@@ -27,8 +26,8 @@ export function Products() {
         )}
         renderItem={({ item }) => (
           <View className="flex-row justify-between items-center active:bg-gray-100 px-5 py-4 border-b-[0.3px] border-gray-400 w-full">
-            <Text className="text-2xl">{item.name}</Text>
-            <Text className="text-lg">R${item.price / 100}</Text>
+            <Text className="text-2xl">{item.product_name}</Text>
+            <Text className="text-lg">R${item.price_cents / 100}</Text>
           </View>
         )}
       />
