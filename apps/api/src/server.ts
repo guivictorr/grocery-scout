@@ -9,6 +9,7 @@ import statusController from "./controllers/status";
 import productsController from "./controllers/products";
 import { ZodError } from "zod";
 import marketsController from "./controllers/markets";
+import pricesController from "./controllers/prices";
 
 const fastify = Fastify();
 
@@ -46,4 +47,5 @@ function handleV1Routes(app: FastifyInstance) {
   app.get("/products/:ean", productsController.get);
   app.post("/markets", marketsController.post);
   app.get("/markets", marketsController.get);
+  app.post("/prices", pricesController.post);
 }

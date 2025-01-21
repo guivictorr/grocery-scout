@@ -10,7 +10,7 @@ interface MarketDto {
 
 async function create(name: string, lat: number, lon: number) {
   const newProductResult = await database.query<MarketDto>({
-    text: "INSERT INTO markets (name,lat,lon) VALUES ($1, $2, $3) RETURNING *",
+    text: "INSERT INTO markets (name,lat,lon) VALUES ($1, $2, $3) RETURNING id::int, name, lat, lon, created_at",
     values: [name, lat, lon],
   });
   const market = newProductResult.rows[0];
