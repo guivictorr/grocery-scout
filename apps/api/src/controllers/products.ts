@@ -2,7 +2,6 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
 import product from "@/models/product";
-import { NotFoundError } from "@/infra/errors";
 
 const productSchema = z.object({
   name: z.string().min(3).max(50),
