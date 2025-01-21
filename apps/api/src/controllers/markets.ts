@@ -13,9 +13,14 @@ async function post(request: FastifyRequest, reply: FastifyReply) {
 
   reply.status(201).send(marketResult);
 }
+async function get(request: FastifyRequest, reply: FastifyReply) {
+  const marketResult = await market.list();
+  reply.status(200).send(marketResult);
+}
 
 const marketsController = {
   post,
+  get,
 };
 
 export default marketsController;
