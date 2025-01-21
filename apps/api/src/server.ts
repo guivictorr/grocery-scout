@@ -48,5 +48,5 @@ function handleV1Routes(app: FastifyInstance) {
   app.post("/markets", marketsController.post);
   app.get("/markets", marketsController.get);
   app.post("/prices", pricesController.post);
-  app.get("/prices/:marketId", pricesController.list);
+  app.get("/prices/:marketId", pricesController.get);
 }
