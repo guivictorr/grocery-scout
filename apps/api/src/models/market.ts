@@ -18,8 +18,17 @@ async function create(name: string, lat: number, lon: number) {
   return market;
 }
 
+async function list() {
+  const marketsResult = await database.query<MarketDto>({
+    text: "SELECT * FROM markets",
+  });
+  const markets = marketsResult.rows;
+  return markets;
+}
+
 const market = {
   create,
+  list,
 };
 
 export default market;
