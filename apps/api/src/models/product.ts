@@ -25,7 +25,7 @@ async function create(name: string, ean: string) {
   }
 
   const newProductResult = await database.query<ProductDto>({
-    text: "INSERT INTO products (name,ean) VALUES ($1, $2) RETURNING id",
+    text: "INSERT INTO products (name,ean) VALUES ($1, $2) RETURNING id::int",
     values: [name, ean],
   });
   const productId = newProductResult.rows[0].id;
