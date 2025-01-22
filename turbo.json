@@ -1,7 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
-  "globalEnv": ["DATABASE_URL", "NODE_ENV", "POSTGRES_DATABASE"],
+  "globalEnv": [
+    "DATABASE_URL",
+    "NODE_ENV",
+    "POSTGRES_DATABASE",
+    "EXPO_PUBLIC_API_URL"
+  ],
   "tasks": {
     "lint": {
       "dependsOn": ["^lint"]
