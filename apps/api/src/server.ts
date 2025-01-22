@@ -17,7 +17,8 @@ const fastify = Fastify({
 });
 
 fastify.register(cors, {
-  origin: process.env.NODE_ENV === "development",
+  origin:
+    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test",
 });
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
