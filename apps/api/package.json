@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "npm run services:up && npm run services:wait:database && npm run migrations:up && tsx watch --env-file=.env.development src/server.ts",
     "postdev": "npm run services:stop",
-    "test": "npm run services:up && concurrently --n api,jest -k -s command-jest \"npm run dev\" \"jest --runInBand\"",
+    "test": "npm run services:up && concurrently --n api,jest --hide api -k -s command-jest \"npm run dev\" \"jest --runInBand\"",
     "posttest": "npm run services:stop",
     "test:watch": "jest --watchAll --runInBand --verbose",
     "lint": "eslint .",

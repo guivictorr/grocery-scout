@@ -35,6 +35,15 @@ describe("GET /api/v1/prices", () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        price_cents: 3999,
+        marketId: market.id,
+        productId: product.id,
+      }),
+    });
+    await fetch("http://localhost:3000/api/v1/prices", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         price_cents: 2999,
         marketId: market.id,
         productId: product.id,
@@ -44,7 +53,6 @@ describe("GET /api/v1/prices", () => {
       `http://localhost:3000/api/v1/prices/${market.id}`,
     );
     const prices = await pricesResponse.json();
-    console.log(prices);
 
     expect(pricesResponse.status).toBe(200);
     expect(prices[0]).toHaveProperty("id");
