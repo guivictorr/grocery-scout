@@ -16,10 +16,10 @@ const fastify = Fastify({
   logger: true,
 });
 
-fastify.register(cors, {
-  origin:
-    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test",
-});
+//fastify.register(cors, {
+//  origin:
+//    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test",
+//});
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
 fastify.setErrorHandler((error, request, reply) => {
