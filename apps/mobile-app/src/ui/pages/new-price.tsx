@@ -4,7 +4,14 @@ import { useState } from "react";
 import { Text, View } from "react-native";
 import CurrencyInput from "../components/currency-input";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createPrice } from "@/infra/database";
+import { api } from "@/api/api-client";
+import { PriceDto } from "@/lib/react-query";
+
+interface NewPriceRequest {
+  price_cents: number;
+  productId: number;
+  marketId: number;
+}
 
 export function NewPrice() {
   const [price, setPrice] = useState(0);
@@ -13,7 +20,8 @@ export function NewPrice() {
   const { marketId, productId } = useLocalSearchParams();
 
   const { mutate: createPriceMutation } = useMutation({
-    mutationFn: createPrice,
+    mutationFn: (data: NewPriceRequest) =>
+      api.post<NewPriceRequest, PriceDto>("prices", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["markets"] });
       queryClient.invalidateQueries({ queryKey: ["prices", marketId] });
@@ -23,7 +31,7 @@ export function NewPrice() {
 
   function handleNewPrice() {
     createPriceMutation({
-      price,
+      price_cents: price,
       marketId: Number(marketId),
       productId: Number(productId),
     });

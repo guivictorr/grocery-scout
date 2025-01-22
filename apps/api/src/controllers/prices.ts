@@ -12,7 +12,7 @@ async function post(request: FastifyRequest, reply: FastifyReply) {
   await price.create(price_cents, productId, marketId);
   reply.status(201).send({});
 }
-async function list(request: FastifyRequest, reply: FastifyReply) {
+async function get(request: FastifyRequest, reply: FastifyReply) {
   const { marketId } = priceSchema
     .pick({ marketId: true })
     .parse(request.params);
@@ -22,7 +22,7 @@ async function list(request: FastifyRequest, reply: FastifyReply) {
 
 const pricesController = {
   post,
-  list,
+  get,
 };
 
 export default pricesController;

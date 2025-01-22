@@ -2,7 +2,6 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import { z } from "zod";
 
 import product from "@/models/product";
-import { NotFoundError } from "@/infra/errors";
 
 const productSchema = z.object({
   name: z.string().min(3).max(50),
@@ -26,9 +25,6 @@ const getParamsSchema = z.object({
 async function get(request: FastifyRequest, reply: FastifyReply) {
   const params = getParamsSchema.parse(request.params);
   const productResult = await product.findByEan(params.ean);
-  if (productResult.rowCount === 0) {
-    throw new NotFoundError();
-  }
 
   reply.status(200).send(productResult.rows[0]);
 }

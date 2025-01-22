@@ -1,4 +1,4 @@
-import { listMarkets } from "@/infra/database";
+import queries from "@/lib/react-query";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
@@ -6,16 +6,12 @@ import { Button, FlatList, Pressable, Text, View } from "react-native";
 
 export function Home() {
   const { showActionSheetWithOptions } = useActionSheet();
-  const { data, refetch, isRefetching } = useQuery({
-    queryFn: listMarkets,
-    queryKey: ["markets"],
-  });
+  const { data, refetch, isRefetching } = useQuery(queries.listMarketsQuery);
   return (
     <View className="flex-1">
       <FlatList
         data={data}
         contentInsetAdjustmentBehavior="always"
-        contentContainerClassName="items-center justify-center"
         keyExtractor={(item) => String(item.id)}
         refreshing={isRefetching}
         onRefresh={() => refetch()}
@@ -57,10 +53,9 @@ export function Home() {
                 },
               )
             }
-            className="flex-row justify-between items-center active:bg-gray-100 px-5 py-4 border-b-[0.3px] border-gray-400 w-full"
+            className="active:bg-gray-100 px-5 py-4 border-b-[0.3px] border-gray-400"
           >
             <Text className="text-2xl">{item.name}</Text>
-            <Text className="text-lg">{item.productCount} Produtos</Text>
           </Pressable>
         )}
       />
