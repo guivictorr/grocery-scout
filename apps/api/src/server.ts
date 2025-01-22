@@ -1,4 +1,6 @@
 import Fastify, { FastifyInstance } from "fastify";
+import { ZodError } from "zod";
+import cors from "@fastify/cors";
 import {
   BaseError,
   InternalServerError,
@@ -7,12 +9,15 @@ import {
 } from "./infra/errors";
 import statusController from "./controllers/status";
 import productsController from "./controllers/products";
-import { ZodError } from "zod";
 import marketsController from "./controllers/markets";
 import pricesController from "./controllers/prices";
 
 const fastify = Fastify({
   logger: true,
+});
+
+fastify.register(cors, {
+  origin: process.env.NODE_ENV === "development",
 });
 
 fastify.register(handleV1Routes, { prefix: "/api/v1" });
