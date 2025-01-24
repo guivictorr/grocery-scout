@@ -1,6 +1,6 @@
 import database from "@/infra/database";
 
-export async function getDatabaseDependencies() {
+async function status() {
   const databaseVersionResult = await database.query<{
     server_version: string;
   }>({
@@ -35,3 +35,9 @@ export async function getDatabaseDependencies() {
     },
   };
 }
+
+const health = {
+  status,
+};
+
+export default health;

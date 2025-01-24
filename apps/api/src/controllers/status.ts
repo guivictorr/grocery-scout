@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from "fastify";
-import { getDatabaseDependencies } from "@/models/health";
+import health from "@/models/health";
 
 async function get(request: FastifyRequest, reply: FastifyReply) {
-  const dependencies = await getDatabaseDependencies();
+  const dependencies = await health.status();
   reply.status(200).send(dependencies);
 }
 
