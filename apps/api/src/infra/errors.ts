@@ -39,13 +39,12 @@ export class ConflictError extends BaseError {
   }
 }
 export class NotFoundError extends BaseError {
-  constructor() {
+  constructor(message: string, action: string) {
     super();
-    this.message = "This route doesn't exist.";
+    this.message = message;
     this.name = "NotFoundError";
     this.statusCode = 404;
-    this.action =
-      "Verify if the address is correct or if the http verb is valid.";
+    this.action = action;
   }
 }
 export class InternalServerError extends Error {
