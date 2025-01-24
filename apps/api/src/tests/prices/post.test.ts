@@ -7,28 +7,12 @@ beforeAll(async () => {
 
 describe("POST /api/v1/prices", () => {
   test("Creating a new price registry", async () => {
-    const marketResponse = await fetch("http://localhost:3000/api/v1/markets", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: "John Doe's Market",
-        lat: -28.3392173,
-        lon: -48.7040639,
-      }),
-    });
-    const market = await marketResponse.json();
-    const productResponse = await fetch(
-      "http://localhost:3000/api/v1/products",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Coke",
-          ean: "9519576280118",
-        }),
-      },
+    const product = await orchestrator.createProduct("Coke", "9519576280118");
+    const market = await orchestrator.createMarket(
+      "John Doe's Market",
+      -28.3392173,
+      -48.7040639,
     );
-    const product = await productResponse.json();
 
     const response = await fetch("http://localhost:3000/api/v1/prices", {
       method: "POST",

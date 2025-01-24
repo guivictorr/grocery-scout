@@ -1,5 +1,8 @@
 import retry from "async-retry";
 import database from "../infra/database";
+import price from "../models/price";
+import market from "../models/market";
+import product from "../models/product";
 
 async function waitForAllServices() {
   await waitForWebServer();
@@ -25,9 +28,28 @@ async function clearTables() {
   });
 }
 
+async function createPrice(
+  price_cents: number,
+  marketId: number,
+  productId: number,
+) {
+  await price.create(price_cents, productId, marketId);
+}
+async function createMarket(name: string, lat: number, lon: number) {
+  const result = await market.create(name, lat, lon);
+  return result;
+}
+async function createProduct(name: string, ean: string) {
+  const result = await product.create(name, ean);
+  return { id: result };
+}
+
 const orchestrator = {
   waitForAllServices,
   clearTables,
+  createProduct,
+  createMarket,
+  createPrice,
 };
 
 export default orchestrator;

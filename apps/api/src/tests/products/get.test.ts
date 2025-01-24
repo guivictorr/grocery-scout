@@ -7,25 +7,17 @@ beforeAll(async () => {
 
 describe("GET /api/v1/products/:ean", () => {
   test("Retrieving product by EAN", async () => {
-    const requestBody = {
-      name: "Coke",
-      ean: "9519576280118",
-    };
-    await fetch("http://localhost:3000/api/v1/products", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    });
+    await orchestrator.createProduct("Coke", "9519576280118");
 
-    const productResponse = await fetch(
+    const response = await fetch(
       "http://localhost:3000/api/v1/products/9519576280118",
     );
 
-    const productResponseResult = await productResponse.json();
+    const responseBody = await response.json();
 
-    expect(productResponse.status).toBe(200);
-    expect(productResponseResult.name).toEqual("Coke");
-    expect(productResponseResult.ean).toEqual("9519576280118");
+    expect(response.status).toBe(200);
+    expect(responseBody.name).toEqual("Coke");
+    expect(responseBody.ean).toEqual("9519576280118");
   });
   test.todo("Retrieving non-existent product");
   //test("Retrieving non-existent product", async () => {

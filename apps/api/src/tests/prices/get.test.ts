@@ -7,48 +7,15 @@ beforeAll(async () => {
 
 describe("GET /api/v1/prices", () => {
   test("Retrieving market price history", async () => {
-    const marketResponse = await fetch("http://localhost:3000/api/v1/markets", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: "John Doe's Market",
-        lat: -28.3392173,
-        lon: -48.7040639,
-      }),
-    });
-    const market = await marketResponse.json();
-
-    const productResponse = await fetch(
-      "http://localhost:3000/api/v1/products",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: "Coke",
-          ean: "9519576280118",
-        }),
-      },
+    const product = await orchestrator.createProduct("Coke", "9519576280118");
+    const market = await orchestrator.createMarket(
+      "John Doe's Market",
+      -28.3392173,
+      -48.7040639,
     );
-    const product = await productResponse.json();
+    await orchestrator.createPrice(1999, market.id, product.id);
+    await orchestrator.createPrice(2999, market.id, product.id);
 
-    await fetch("http://localhost:3000/api/v1/prices", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        price_cents: 3999,
-        marketId: market.id,
-        productId: product.id,
-      }),
-    });
-    await fetch("http://localhost:3000/api/v1/prices", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        price_cents: 2999,
-        marketId: market.id,
-        productId: product.id,
-      }),
-    });
     const pricesResponse = await fetch(
       `http://localhost:3000/api/v1/prices/${market.id}`,
     );
