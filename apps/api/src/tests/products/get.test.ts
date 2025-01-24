@@ -1,4 +1,3 @@
-import { NotFoundError } from "@/infra/errors";
 import orchestrator from "../orchestrator";
 
 beforeAll(async () => {
@@ -8,17 +7,18 @@ beforeAll(async () => {
 
 describe("GET /api/v1/products/:ean", () => {
   test("Retrieving product by EAN", async () => {
-    await orchestrator.createProduct("Coke", "9519576280118");
+    const ean = "9519576280118";
+    await orchestrator.createProduct("Coke", ean);
 
     const response = await fetch(
-      "http://localhost:3000/api/v1/products/9519576280118",
+      `http://localhost:3000/api/v1/products/${ean}`,
     );
 
     const responseBody = await response.json();
 
     expect(response.status).toBe(200);
     expect(responseBody.name).toEqual("Coke");
-    expect(responseBody.ean).toEqual("9519576280118");
+    expect(responseBody.ean).toEqual(ean);
   });
   test("Retrieving non-existent product", async () => {
     const productResponse = await fetch(
