@@ -1,5 +1,6 @@
 import database from "@/infra/database";
-import { ConflictError } from "@/infra/errors";
+import { ConflictError, NotFoundError } from "@/infra/errors";
+import productQueries from "@/queries/product";
 
 interface ProductDto {
   id: number;
@@ -9,16 +10,20 @@ interface ProductDto {
 }
 
 async function findByEan(ean: string) {
-  const productResult = await database.query<ProductDto>({
-    text: "SELECT * FROM products WHERE ean = $1",
-    values: [ean],
-  });
+  const productResult = await productQueries.findByEan(ean);
+
+  if (productResult.rowCount <= 0) {
+    throw new NotFoundError(
+      "This product doesn't exists.",
+      "Please verify if the EAN is correct.",
+    );
+  }
 
   return productResult;
 }
 
 async function create(name: string, ean: string) {
-  const product = await findByEan(ean);
+  const product = await productQueries.findByEan(ean);
   const isConflicting = product.rowCount > 0;
   if (isConflicting) {
     throw new ConflictError();
