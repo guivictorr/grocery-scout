@@ -1,17 +1,10 @@
-import React from "react";
-import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Text, View } from "react-native";
-import CurrencyInput from "../components/currency-input";
+import { router, useLocalSearchParams } from "expo-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/api/api-client";
-import { PriceDto } from "@/lib/react-query";
 
-interface NewPriceRequest {
-  price_cents: number;
-  productId: number;
-  marketId: number;
-}
+import mutations from "@/lib/mutations";
+import CurrencyInput from "../components/currency-input";
 
 export function NewPrice() {
   const [price, setPrice] = useState(0);
@@ -19,22 +12,23 @@ export function NewPrice() {
   const queryClient = useQueryClient();
   const { marketId, productId } = useLocalSearchParams();
 
-  const { mutate: createPriceMutation } = useMutation({
-    mutationFn: (data: NewPriceRequest) =>
-      api.post<NewPriceRequest, PriceDto>("prices", data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["markets"] });
-      queryClient.invalidateQueries({ queryKey: ["prices", marketId] });
-      router.back();
-    },
-  });
+  const { mutate: createPriceMutation } = useMutation(mutations.createPrice());
 
   function handleNewPrice() {
-    createPriceMutation({
-      price_cents: price,
-      marketId: Number(marketId),
-      productId: Number(productId),
-    });
+    createPriceMutation(
+      {
+        price_cents: price,
+        marketId: Number(marketId),
+        productId: Number(productId),
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["markets"] });
+          queryClient.invalidateQueries({ queryKey: ["prices", marketId] });
+          router.back();
+        },
+      },
+    );
   }
 
   return (
