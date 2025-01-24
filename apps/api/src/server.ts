@@ -17,7 +17,7 @@ fastify.listen({ port: 3000, host: "0.0.0.0" });
 function handleV1Routes(app: FastifyInstance) {
   app.get("/status", statusController.get);
   app.post("/products", productsController.post);
-  app.get("/:ean", productsController.get);
+  app.get("/products/:ean", productsController.get);
   app.post("/markets", marketsController.post);
   app.get("/markets", marketsController.get);
   app.post("/prices", pricesController.post);
