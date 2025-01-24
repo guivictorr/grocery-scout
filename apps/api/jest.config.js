@@ -1,4 +1,8 @@
 const dotenv = require("dotenv");
 dotenv.config({ path: ".env.development" });
 
-module.exports = {};
+module.exports = {
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
+};
