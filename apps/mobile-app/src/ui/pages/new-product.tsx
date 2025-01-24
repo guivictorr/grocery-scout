@@ -1,16 +1,10 @@
-import React from "react";
-import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/api/api-client";
-import { ProductDto } from "@/lib/react-query";
-import { AxiosResponse } from "axios";
 
-interface NewProductRequest {
-  name: string;
-  ean: string;
-}
+import mutations from "@/lib/mutations";
+import { queryKeys } from "@/lib/queries";
 
 export function NewProduct() {
   const [productName, setProductName] = useState("");
@@ -18,23 +12,24 @@ export function NewProduct() {
   const { ean, marketId } = useLocalSearchParams();
 
   const queryClient = useQueryClient();
-  const { mutate: createProductMutation } = useMutation({
-    mutationFn: (data: NewProductRequest) =>
-      api.post<NewProductRequest, AxiosResponse<ProductDto>>("products", data),
-    onSuccess: ({ data }) => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      router.replace({
-        pathname: "/new-price",
-        params: { marketId, productId: data.id },
-      });
-    },
-  });
+  const { mutate } = useMutation(mutations.createProduct());
 
   function handleNewProduct() {
-    createProductMutation({
-      ean: ean.toString(),
-      name: productName,
-    });
+    mutate(
+      {
+        ean: ean.toString(),
+        name: productName,
+      },
+      {
+        onSuccess: ({ data }) => {
+          queryClient.invalidateQueries({ queryKey: queryKeys.products });
+          router.replace({
+            pathname: "/new-price",
+            params: { marketId, productId: data.id },
+          });
+        },
+      },
+    );
   }
 
   return (

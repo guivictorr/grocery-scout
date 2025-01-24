@@ -53,3 +53,21 @@ const queries = {
 };
 
 export default queries;
+
+interface NewMarketRequest {
+  name: string;
+  lat: number;
+  lon: number;
+}
+const createMarket = () => {
+  return {
+    mutationFn: (data: NewMarketRequest) =>
+      api.post<NewMarketRequest, MarketDto>("markets", data),
+  };
+};
+
+const mutations = {
+  createMarket,
+};
+
+export default mutations;
