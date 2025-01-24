@@ -1,3 +1,4 @@
+import { NotFoundError } from "@/infra/errors";
 import orchestrator from "../orchestrator";
 
 beforeAll(async () => {
@@ -19,15 +20,18 @@ describe("GET /api/v1/products/:ean", () => {
     expect(responseBody.name).toEqual("Coke");
     expect(responseBody.ean).toEqual("9519576280118");
   });
-  test.todo("Retrieving non-existent product");
-  //test("Retrieving non-existent product", async () => {
-  //  const productResponse = await fetch(
-  //    "http://localhost:3000/api/v1/products/9519576280118",
-  //  );
-  //  const productResponseResult = await productResponse.json();
-  //
-  //  const notFoundError = new NotFoundError();
-  //  expect(productResponse.status).toBe(404);
-  //  expect(productResponseResult).toEqual(notFoundError.toJSON());
-  //});
+  test("Retrieving non-existent product", async () => {
+    const productResponse = await fetch(
+      "http://localhost:3000/api/v1/products/12345678",
+    );
+    const productResponseResult = await productResponse.json();
+
+    expect(productResponse.status).toBe(404);
+    expect(productResponseResult).toEqual({
+      status_code: 404,
+      name: "NotFoundError",
+      message: "This product doesn't exists.",
+      action: "Please verify if the EAN is correct.",
+    });
+  });
 });
