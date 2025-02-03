@@ -60,6 +60,7 @@ const CurrencyInput = ({
       keyboardType="numeric"
       returnKeyType="done"
       submitBehavior="blurAndSubmit"
+      scrollEnabled={false}
       {...props}
     />
   );

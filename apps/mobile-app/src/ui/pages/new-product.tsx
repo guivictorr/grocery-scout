@@ -37,7 +37,7 @@ export function NewProduct() {
       <Text className="text-4xl font-medium mb-8">Nome do produto</Text>
       <TextInput
         placeholder="Arroz Urbano 1kg"
-        className="w-full text-6xl text-gray-600"
+        className="w-full text-6xl text-gray-600 h-full"
         autoFocus
         multiline
         onChangeText={setProductName}
@@ -45,6 +45,7 @@ export function NewProduct() {
         onSubmitEditing={handleNewProduct}
         returnKeyType="next"
         submitBehavior="blurAndSubmit"
+        scrollEnabled={false}
       />
     </View>
   );
