@@ -65,6 +65,7 @@ export default {
     },
     plugins: [
       "expo-router",
+      "expo-font",
       [
         "expo-camera",
         {
