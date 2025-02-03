@@ -12,7 +12,7 @@ export function NewProduct() {
   const { ean, marketId } = useLocalSearchParams();
 
   const queryClient = useQueryClient();
-  const { mutate } = useMutation(mutations.createProduct());
+  const { mutate, isPending } = useMutation(mutations.createProduct());
 
   function handleNewProduct() {
     mutate(
@@ -46,6 +46,7 @@ export function NewProduct() {
         returnKeyType="next"
         submitBehavior="blurAndSubmit"
         scrollEnabled={false}
+        readOnly={isPending}
       />
     </View>
   );

@@ -12,7 +12,7 @@ export function NewMarket() {
   const [marketName, setMarketName] = useState("");
   const location = useLocation();
 
-  const { mutate } = useMutation(mutations.createMarket());
+  const { mutate, isPending } = useMutation(mutations.createMarket());
 
   function handleNewMarket() {
     if (!location) {
@@ -42,6 +42,7 @@ export function NewMarket() {
         className="w-full text-6xl text-gray-600"
         autoFocus
         multiline
+        readOnly={isPending}
         numberOfLines={4}
         onSubmitEditing={handleNewMarket}
         onChangeText={setMarketName}

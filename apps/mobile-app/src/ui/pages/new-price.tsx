@@ -12,7 +12,9 @@ export function NewPrice() {
   const queryClient = useQueryClient();
   const { marketId, productId } = useLocalSearchParams();
 
-  const { mutate: createPriceMutation } = useMutation(mutations.createPrice());
+  const { mutate: createPriceMutation, isPending } = useMutation(
+    mutations.createPrice(),
+  );
 
   function handleNewPrice() {
     createPriceMutation(
@@ -34,7 +36,11 @@ export function NewPrice() {
   return (
     <View className="flex-1 h-[380px] w-full px-6 pt-12">
       <Text className="text-4xl font-medium mb-8">Preço</Text>
-      <CurrencyInput onBlur={handleNewPrice} onValueChange={setPrice} />
+      <CurrencyInput
+        readOnly={isPending}
+        onBlur={handleNewPrice}
+        onValueChange={setPrice}
+      />
     </View>
   );
 }
