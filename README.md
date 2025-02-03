@@ -37,9 +37,13 @@ cd grocery-scout
 ## 3. Install dependencies
 npm install
 
-## 4. Run the app
+## 4. Make sure docker is running
+
+## 5. Run the app
 npm run dev
 ```
+
+You can use Expo Go to scan the QR code and run the app.
 
 ## 🤔 How to contribute
 
