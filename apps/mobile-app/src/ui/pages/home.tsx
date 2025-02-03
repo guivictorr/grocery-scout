@@ -1,7 +1,9 @@
+import { useCameraPermissions } from "expo-camera";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import {
+  Alert,
   Button,
   FlatList,
   ListRenderItemInfo,
@@ -14,7 +16,9 @@ import queries, { MarketDto } from "@/lib/queries";
 import { ListEmpty } from "../components/list-empty";
 
 export function Home() {
-  const { data, refetch, isRefetching } = useQuery(queries.listMarketsQuery);
+  const { data, refetch, isRefetching } = useSuspenseQuery(
+    queries.listMarketsQuery,
+  );
 
   return (
     <View className="flex-1">
@@ -40,19 +44,29 @@ export function Home() {
 
 function ListItem({ item }: ListRenderItemInfo<MarketDto>) {
   const { showActionSheetWithOptions } = useActionSheet();
+  const [, requestCameraPermission] = useCameraPermissions();
 
   const options = {
     options: ["Escanear", "Produtos", "Cancelar"],
     cancelButtonIndex: 2,
   };
 
+  const handleScannerNavigation = async () => {
+    const permission = await requestCameraPermission();
+    if (!permission.granted) {
+      return Alert.alert("Permissão para acessar a câmera negado");
+    }
+
+    router.push({
+      pathname: "/scanner",
+      params: { marketId: item.id },
+    });
+  };
+
   const handleSelectedOption = (selectedOption?: number) => {
     switch (selectedOption) {
       case 0:
-        router.push({
-          pathname: "/scanner",
-          params: { marketId: item.id },
-        });
+        handleScannerNavigation();
         break;
       case 1:
         router.push({

@@ -24,6 +24,7 @@ export default function RootLayout() {
             name="scanner"
             options={{
               headerShown: false,
+              presentation: "modal",
             }}
           />
           <Stack.Screen
