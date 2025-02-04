@@ -1,42 +1,48 @@
-import { View } from "react-native";
-import { useCallback, useRef } from "react";
+import { Alert, View } from "react-native";
+import { useCallback, useRef, useState } from "react";
 import { BarcodeScanningResult, CameraView } from "expo-camera";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 
 import { api } from "@/api/api-client";
 import { ProductDto } from "@/lib/queries";
+import { AxiosError } from "axios";
+import { Loading } from "../components/loading";
 
 export function Scanner() {
+  const [isPending, setIsPending] = useState(false);
   const { marketId } = useLocalSearchParams();
   const scannerLockRef = useRef(false);
-  const isScannerLocked = !!scannerLockRef.current;
 
-  const lockScanner = () => (scannerLockRef.current = true);
-  const unlockScanner = () => (scannerLockRef.current = false);
   const handleBarCodeScan = async ({ data: ean }: BarcodeScanningResult) => {
-    if (isScannerLocked) return;
+    if (scannerLockRef.current) return;
     if (ean) {
-      lockScanner();
+      scannerLockRef.current = true;
     }
 
-    const product = await api.get<ProductDto>(`products/${ean}`);
-
-    if (!product.data) {
+    try {
+      setIsPending(true);
+      const product = await api.get<ProductDto>(`products/${ean}`);
       router.push({
-        pathname: "/new-product",
-        params: { ean: ean, marketId },
+        pathname: "/new-price",
+        params: { productId: product.data.id, marketId },
       });
-    }
+    } catch (error) {
+      if (error instanceof AxiosError && error.status === 404) {
+        return router.push({
+          pathname: "/new-product",
+          params: { ean: ean, marketId },
+        });
+      }
 
-    router.push({
-      pathname: "/new-price",
-      params: { productId: product.data.id, marketId },
-    });
+      Alert.alert("Erro inesperado");
+    } finally {
+      setIsPending(false);
+    }
   };
 
   useFocusEffect(
     useCallback(() => {
-      unlockScanner();
+      scannerLockRef.current = false;
     }, []),
   );
 
@@ -45,8 +51,18 @@ export function Scanner() {
       <CameraView
         onBarcodeScanned={handleBarCodeScan}
         barcodeScannerSettings={{ barcodeTypes: ["ean8", "ean13"] }}
-        style={{ flex: 1 }}
-      />
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {isPending && (
+          <View className="flex-1 w-full bg-black/75">
+            <Loading />
+          </View>
+        )}
+      </CameraView>
     </View>
   );
 }

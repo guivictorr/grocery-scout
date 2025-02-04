@@ -1,5 +1,5 @@
 import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 import { FlatList, View, Text, ListRenderItemInfo } from "react-native";
 
@@ -8,7 +8,7 @@ import { ListEmpty } from "../components/list-empty";
 
 export function Products() {
   const { marketId } = useLocalSearchParams();
-  const { data, isRefetching, refetch } = useQuery(
+  const { data, isRefetching, refetch } = useSuspenseQuery(
     queries.listPricesQuery(marketId.toString()),
   );
 

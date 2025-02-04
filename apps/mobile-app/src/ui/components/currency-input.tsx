@@ -50,7 +50,7 @@ const CurrencyInput = ({
 
   return (
     <TextInput
-      className="w-full text-6xl text-gray-600"
+      className="w-full text-6xl text-gray-600 h-full"
       placeholder="R$0,00"
       autoFocus
       multiline
@@ -60,6 +60,7 @@ const CurrencyInput = ({
       keyboardType="numeric"
       returnKeyType="done"
       submitBehavior="blurAndSubmit"
+      scrollEnabled={false}
       {...props}
     />
   );
