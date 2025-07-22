@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 
 import mutations from "@/lib/mutations";
-import { queryKeys } from "@/lib/queries";
 
 export function NewProduct() {
   const [productName, setProductName] = useState("");
 
   const { ean, marketId } = useLocalSearchParams();
 
-  const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation(mutations.createProduct());
 
   function handleNewProduct() {
@@ -22,7 +20,6 @@ export function NewProduct() {
       },
       {
         onSuccess: ({ data }) => {
-          queryClient.invalidateQueries({ queryKey: queryKeys.products });
           router.replace({
             pathname: "/new-price",
             params: { marketId, productId: data.id },
