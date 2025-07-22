@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import mutations from "@/lib/mutations";
 import CurrencyInput from "../components/currency-input";
+import queries from "@/lib/queries";
 
 export function NewPrice() {
   const [price, setPrice] = useState(0);
@@ -25,8 +26,10 @@ export function NewPrice() {
       },
       {
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["markets"] });
-          queryClient.invalidateQueries({ queryKey: ["prices", marketId] });
+          queryClient.invalidateQueries(queries.listMarketsQuery);
+          queryClient.invalidateQueries(
+            queries.listPricesQuery(marketId.toString()),
+          );
           router.back();
         },
       },

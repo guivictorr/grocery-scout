@@ -20,7 +20,7 @@ export interface ProductDto {
   createdAt: string;
 }
 
-export const queryKeys = {
+const queryKeys = {
   markets: ["markets"] as const,
   prices: ["prices"] as const,
   marketPrices: (marketId: string) => [...queryKeys.prices, marketId] as const,
